@@ -25,14 +25,20 @@ router.get('/books', asyncHandler(async (req, res) => {
 
 //form
 router.get('/books/new', asyncHandler(async (req, res) => {
-  console.log(req.body);
   res.render("create-new-book");
 }));
 
 //post create book
-router.get('/books', asyncHandler(async (req, res) => {
+router.post('/books/new', asyncHandler(async (req, res) => {
   const book = await Book.create(req.body);
-  res.redirect("/books/" + book.id);
+  //res.redirect("/books/" + book.id);
+  res.redirect("/books/");
 }));
 
+
+//get book
+router.get("/:id", asyncHandler(async (req, res) => {
+  const book = await Book.findByPk(req.params.id);
+  res.render("update-book", { book });
+}));
 module.exports = router;
