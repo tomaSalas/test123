@@ -40,30 +40,25 @@ app.use('/users', usersRouter);
 
 
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  const err = new Error(
-    `Ups! We couldn't find the page.`
-  );
-  (err.status = 404), next(err);
+/// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
 });
 
 // error handler
-app.use(function (err, req, res, next) {
-  if (err.status === 404) {
-    err.message = `Ups! We couldn't find the page.`;
-    res.render("page-not-found", { err, title: "Page Not Found" });
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  var stat = err.status;
+  if (stat === 404) {
+    res.status(err.status);
+    res.render('page-not-found');
   } else {
-    // Handles all other errors
-    console.log(err.status);
-    console.log(err.message);
-    err.message =
-      err.message || "Ups! There was an unexpected error on the server.";
-    res
-      .status(err.status || 500)
-      .render("error", { err, title: "Server Error" });
-    res.render("error");
+    res.status(err.status || 500);
+    res.render('error');
   }
 });
+
 
 module.exports = app;
