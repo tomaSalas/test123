@@ -40,24 +40,24 @@ app.use('/users', usersRouter);
 
 
 
-/// catch 404 and forward to error handler
+// 404 error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+  const err = new Error() ;
+  err.status = 404 ;
+  err.message = "Ops! We couldn't find the page you were looking for." ;
+  next(err) ;
 });
 
-// error handler
+
+// Global error handler
 app.use(function(err, req, res, next) {
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-  var stat = err.status;
-  if (stat === 404) {
-    res.status(err.status);
-    res.render('page-not-found');
-  } else {
-    res.status(err.status || 500);
-    res.render('error');
-  }
-});
 
+  if (err.status === 404) {
+    res.status(404).render('page-not-found', {err}) ;
+} else {
+    err.status = 500 ;
+    err.message = 'Ops! the query requested does not exist.' ;
+    res.status(err.status).render('error', {err}) ;
+}});
 
 module.exports = app;

@@ -7,7 +7,7 @@ function asyncHandler(cb) {
     try {
       await cb(req, res, next)
     } catch(error) {
-      res.status(500).send(error);
+      next(error);
     }
   }
 }
@@ -52,7 +52,8 @@ router.get("/books/:id", asyncHandler(async (req, res) => {
   if ( book ) {
     res.render("update-book", { book });
   } else {
-    res.sendStatus(404);
+    // res.sendStatus(404);
+    next(error);
   }
   }));
 

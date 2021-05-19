@@ -1,6 +1,11 @@
 extends layout
 
 block content
-  h1= message
-  h2= status
-  pre #{stack}
+  h1= err.message
+  h2= `The error "${err.status}"`
+  pre #{err.stack}
+  br
+  p
+    a(class="button" href="/") Home 
+
+
